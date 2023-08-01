@@ -3,9 +3,16 @@
 import 'package:catalog_new/utils/routes.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String name = "";
+  bool changeButton = false;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -26,7 +33,7 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 5.0),
             Text(
-              "Welcome",
+              "Welcome $name",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -44,6 +51,12 @@ class LoginPage extends StatelessWidget {
                       hintText: "Enter UserName",
                       labelText: "username",
                     ),
+                    onChanged: (value) {
+                      name = value;
+                      setState(() {
+                        //if required
+                      });
+                    },
                   ),
                   TextFormField(
                     obscureText: true,
@@ -57,23 +70,35 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             InkWell(
-              onTap: () {
+              onTap: () async {
+                setState(() {
+                  changeButton = true;
+                });
+                await Future.delayed(Duration(seconds: 1));
                 Navigator.pushNamed(context, MyRoutes.homeRoute);
               },
-              child: Container(
-                width: 150,
+              child: AnimatedContainer(
+                duration: Duration(seconds: 1),
+                width: changeButton ? 50 : 150,
+                //width: 150,
                 height: 50,
                 alignment: Alignment.center,
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                      //color: Colors.lightGreen,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
-                ),
+                child: changeButton
+                    ? Icon(
+                        Icons.done,
+                        color: Colors.white,
+                      )
+                    : Text(
+                        "Login",
+                        style: TextStyle(
+                            //color: Colors.lightGreen,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
                 decoration: BoxDecoration(
                   color: Colors.green,
-                  borderRadius: BorderRadius.circular(8),
+                  // shape: changeButton ? BoxShape.circle : BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(changeButton ? 50 : 8),
                 ),
               ),
             ),
